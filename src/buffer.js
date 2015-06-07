@@ -13,15 +13,19 @@ var Buffer = (function () {
     }
 
     function isString(v) {
-        return isNaN(v)
+        return typeof(v)=="string"
     }
 
     function isNumber(v) {
-        return !isNaN(v)
+        return typeof (v) == "number"
     }
 
     function isArray(v) {
         return Array.isArray(v)
+    }
+
+    function isFunction(v) {
+        return typeof(v)=="function"
     }
     //helpers end
 
@@ -74,6 +78,28 @@ var Buffer = (function () {
                 return b;
             }
         },
+        hex:{
+            to: function(b){
+                return b.reduce(function(p, c){
+                    var r = c.toString(16);
+                    if (r.length % 2 != 0)
+                        r="0"+r;
+                    return p+r;
+                }, "");
+            },
+            from: function (s) {
+                if (!isString(s))
+                    throw new TypeError("Parameter 1 must be String");
+                var reg = /^[0-9a-f]+$/i;
+                if (!reg.test(s) || s.length % 2 != 0)
+                    throw new Error("Parameter 1 is not HEX string");
+                var res = new Buffer(s.length / 2);
+                for (var i = 0; i < res.length; i++) {
+                    res[i] = parseInt((s.charAt(2 * i) + s.charAt((2 * i) + 1)), 16);
+                }
+                return res;
+            }
+        },
         utf8: {
             to: function (b) {
                 var s = string.binary.to(b);
@@ -95,6 +121,16 @@ var Buffer = (function () {
     }
 
     string.ascii = string.binary;
+
+    if (!Uint8Array.prototype.reduce)
+        Uint8Array.prototype.reduce = function (callback, initValue) {
+            if (!isFunction(callback))
+                throw new TypeError("Parameter 1 must be Function");
+            var p = initValue;
+            for (var i = 0; i < this.length; i++)
+                p = callback(p, this[i], i, this);
+            return p;
+        }
 
     Uint8Array.prototype.toString = function (encoding, start, end) {
         if (!encoding) encoding = "utf8";
