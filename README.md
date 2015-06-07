@@ -107,3 +107,21 @@ Returns a `Boolean` of whether this and **otherBuffer** have the same bytes.
 `Number` **end** *Optional*, *Default: Buffer.length*
 
 Returns a new buffer sliced from the **start** to the **end**.
+
+###Buffer.reduce(callback[, initValue])
+`Function` **callback**
+Function to execute on each value in the array, taking four arguments:
+
+- **previousValue**
+The value previously returned in the last invocation of the callback, or initialValue, if supplied. (See below.)
+- **currentValue**
+The current element being processed in the array.
+- **index**
+The index of the current element being processed in the array.
+- **array**
+The array reduce was called upon.
+
+`Variant` **initValue**
+Object to use as the first argument to the first call of the callback. *Optional*
+
+Applies a function against an accumulator and each value of the array (from left-to-right) has to reduce it to a single value.
