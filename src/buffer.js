@@ -45,15 +45,9 @@ var Buffer = (function () {
                         throw new Error("Unknown encoding type (" + enc + ")");
                     buffer = string[enc].from(v);
                 }
-                else if (v instanceof Buffer) {
-
-                }
                 else
                     throw new TypeError("Wrong type of parameter 1");
             }
-        }
-
-        this.toString = function () {
         }
 
         init.apply(this, arguments)
@@ -168,6 +162,8 @@ var Buffer = (function () {
     Uint8Array.prototype.compare = function (otherBuffer) {
         if (isEmpty(otherBuffer))
             throw new TypeError('Parameter 1 can not be Empty');
+        if (!Buffer.isBuffer(otherBuffer))
+            throw new TypeError("Parameter 1 msut be Buffer");
         for (var i = 0; i < this.length; i++)
             if (this[i] !== otherBuffer[i])
                 if (this[i] < otherBuffer[i])
@@ -177,6 +173,14 @@ var Buffer = (function () {
         if (i < otherBuffer.length)
             return -1;
         return 0;
+    }
+
+    Buffer.compare = function (buf1, buf2) {
+        if (!Buffer.isBuffer(buf1))
+            throw new TypeError("Parameter 1 msut be Buffer");
+        if (!Buffer.isBuffer(buf2))
+            throw new TypeError("Parameter 2 msut be Buffer");
+        return buf1.compare(buf2);
     }
 
     Buffer.isBuffer = function (obj) {
