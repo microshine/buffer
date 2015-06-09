@@ -125,3 +125,72 @@ The array reduce was called upon.
 Object to use as the first argument to the first call of the callback. *Optional*
 
 Applies a function against an accumulator and each value of the array (from left-to-right) has to reduce it to a single value.
+
+###Buffer.forEach(callback[, thisArg])
+Executes a provided function once per array element.
+
+`Function` **callback**
+Function to execute for each element, taking three arguments:
+
+- **currentValue**
+The current element being processed in the array.
+- **index**
+The index of the current element being processed in the array.
+- **array**
+The array reduce was called upon.
+
+`Variant` **thisArg**
+Value to use as this when executing callback. *Optional*
+
+If a **thisArg** parameter is provided to `forEach()`, it will be passed to callback when invoked, for use as its this value.  Otherwise, the value `currentValue` will be passed for use as its this value.
+
+###Buffer.every(callback[, thisArg])
+Method tests whether all elements in the array pass the test implemented by the provided function.
+
+`Function` **callback**
+Function to execute for each element, taking two arguments:
+
+- **currentValue**
+The current element being processed in the array.
+- **index**
+The index of the current element being processed in the array.
+- **array**
+The array reduce was called upon.
+
+`Variant` **thisArg**
+Value to use as this when executing callback. *Optional*
+
+```
+var buf = new Buffer('test'); //Buffer [116, 101, 115, 116]
+var res = buf.every(function (v,i,array) {
+    if (this > 200)
+        return true;
+});
+console.log(res); //false
+```
+
+###Buffer.some(callback[, thisArg])
+Method tests whether some element in the array passes the test implemented by the provided function.
+
+`Function` **callback**
+Function to execute for each element, taking two arguments:
+
+- **currentValue**
+The current element being processed in the array.
+- **index**
+The index of the current element being processed in the array.
+- **array**
+The array reduce was called upon.
+
+`Variant` **thisArg**
+Value to use as this when executing callback. *Optional*
+
+Example:
+```
+var buf = new Buffer('test'); //Buffer [116, 101, 115, 116]
+var res = buf.some(function (v,i,array) {
+    if (this < 110)
+        return true;
+});
+console.log(res); //true
+```

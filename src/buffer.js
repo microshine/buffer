@@ -13,7 +13,7 @@ var Buffer = (function () {
     }
 
     function isString(v) {
-        return typeof(v)=="string"
+        return typeof (v) == "string"
     }
 
     function isNumber(v) {
@@ -25,7 +25,7 @@ var Buffer = (function () {
     }
 
     function isFunction(v) {
-        return typeof(v)=="function"
+        return typeof (v) == "function"
     }
     //helpers end
 
@@ -78,13 +78,13 @@ var Buffer = (function () {
                 return b;
             }
         },
-        hex:{
-            to: function(b){
-                return b.reduce(function(p, c){
+        hex: {
+            to: function (b) {
+                return b.reduce(function (p, c) {
                     var r = c.toString(16);
                     if (r.length % 2 != 0)
-                        r="0"+r;
-                    return p+r;
+                        r = "0" + r;
+                    return p + r;
                 }, "");
             },
             from: function (s) {
@@ -130,6 +130,43 @@ var Buffer = (function () {
             for (var i = 0; i < this.length; i++)
                 p = callback(p, this[i], i, this);
             return p;
+        }
+
+    if (!Uint8Array.prototype.forEach)
+        Uint8Array.prototype.forEach = function (callback, thisArg) {
+            if (!isFunction(callback))
+                throw new TypeError("Parameter 1 must be Function");
+            var that = thisArg;
+            for (var i = 0; i < this.length; i++) {
+                if (isUndefined(thisArg))
+                    that = this[i];
+                callback.call(that, this[i], i, this);
+            }
+        }
+
+    function someEvery(res, callback, thisArg) {
+        if (!isFunction(callback))
+            throw new TypeError("Parameter 1 must be Function");
+        var that = thisArg;
+        for (var i = 0; i < this.length; i++) {
+            if (isUndefined(thisArg))
+                that = this[i];
+            var r = callback.call(that, this[i], i, this);
+            if (isEmpty(r)) r = false;
+            if (r == res)
+                return res;
+        }
+        return !res;
+    }
+
+    if (!Uint8Array.prototype.every)
+        Uint8Array.prototype.every = function (callback, thisArg) {
+            return someEvery.call(this, false, callback, thisArg);
+        }
+
+    if (!Uint8Array.prototype.some)
+        Uint8Array.prototype.some = function (callback, thisArg) {
+            return someEvery.call(this, true, callback, thisArg);
         }
 
     Uint8Array.prototype.toString = function (encoding, start, end) {
